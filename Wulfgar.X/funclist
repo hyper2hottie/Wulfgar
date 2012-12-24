@@ -1,0 +1,8 @@
+_main: CODE, 1929 0 38
+_Set_SPBRG: CODE, 1967 0 81
+__initialization: CODE, 1836 0 0
+_get_USART_char: CODE, 1850 0 15
+_clear_usart_errors: CODE, 1865 0 29
+_picInit: CODE, 1840 0 10
+_USART_Init: CODE, 1894 0 35
+Total: 208
