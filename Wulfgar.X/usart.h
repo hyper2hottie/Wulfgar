@@ -21,7 +21,7 @@ unsigned char get_USART_char_timeout(void);
 void send_USART_char(unsigned char character);
 void send_USART_string(unsigned char const string[]);
 
-void USART_Init(void);
+void USART_Init(int receiveInterupts    );
 
 
 //#include "usart.c"

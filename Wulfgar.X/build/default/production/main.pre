@@ -2137,23 +2137,41 @@ unsigned char get_USART_char_timeout(void);
 void send_USART_char(unsigned char character);
 void send_USART_string(unsigned char const string[]);
 
-void USART_Init(void);
+void USART_Init(int receiveInterupts );
 
 # 35 "main.h"
 void picInit();
 
-# 15 "main.c"
+# 13 "main.c"
+char command = 'A';
+
+interrupt void isr(void)
+{
+
+GIE = 0;
+INTE = 0;
+
+
+if(RCIF)
+{
+command = get_USART_char();
+}
+
+GIE = 1;
+INTE = 1;
+}
+
 int main(int argc, char** argv)
 {
 
 picInit();
 
 
-USART_Init();
+USART_Init(1);
 
 while(1)
 {
-char command = get_USART_char();
+
 if(command == 'A')
 {
 RB5 = 1;

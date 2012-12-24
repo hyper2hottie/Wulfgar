@@ -9,20 +9,35 @@
 #include <stdlib.h>
 
 #include "main.h"
-/*
- * 
- */
+
+char command = 'A';
+
+interrupt void isr(void)
+{
+    //Disable interrupts
+    GIE = 0;
+    INTE = 0;
+
+    //Check if this is a usart receive interrupt
+    if(RCIF)
+    {
+        command = get_USART_char();
+    }
+    //Reenable interrupts
+    GIE = 1;
+    INTE = 1;
+}
+
 int main(int argc, char** argv)
 {
     //Init some important pi variables
     picInit();
     
     //Init usart for transmit and receive
-    USART_Init();
+    USART_Init(1);
     
     while(1)
     {
-        char command = get_USART_char();
         if(command == 'A')
         {
             RB5 = 1;

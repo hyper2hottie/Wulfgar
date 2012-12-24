@@ -2024,10 +2024,10 @@ unsigned char get_USART_char_timeout(void);
 void send_USART_char(unsigned char character);
 void send_USART_string(unsigned char const string[]);
 
-void USART_Init(void);
+void USART_Init(int receiveInterupts );
 
 # 19 "usart.c"
-void USART_Init(void)
+void USART_Init(int receiveInterupts)
 {
 
 TRISC7 = 1;
@@ -2064,8 +2064,18 @@ CREN = 1;
 
 
 TXIE=0;
-RCIE=0;
 
+if(receiveInterupts)
+{
+
+RCIE = 1;
+GIE = 1;
+PEIE = 1;
+}
+else
+{
+RCIE = 0;
+}
 TXEN=0;
 
 TXEN=1;
@@ -2096,7 +2106,7 @@ default: break;
 return;
 }
 
-# 99
+# 109
 unsigned char get_USART_char(void)
 {
 do
@@ -2143,7 +2153,7 @@ for(unsigned char iter = 0 ; iter < strlen(string) ; iter++)
 return;
 }
 
-# 149
+# 159
 void clear_usart_errors(void)
 {
 

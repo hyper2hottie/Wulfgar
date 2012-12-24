@@ -1,11 +1,17 @@
 Version 3.2 HI-TECH Software Intermediate Code
+"3521 /opt/microchip/xc8/v1.12/include/pic16f886.h
+[v _GIE `Vb ~T0 @X0 0 e@95 ]
+"3539
+[v _INTE `Vb ~T0 @X0 0 e@92 ]
+"3707
+[v _RCIF `Vb ~T0 @X0 0 e@101 ]
+"19 usart.h
+[v _get_USART_char `(uc ~T0 @X0 0 ef ]
 [p mainexit ]
 "35 main.h
 [v _picInit `(v ~T0 @X0 0 ef ]
 "24 usart.h
-[v _USART_Init `(v ~T0 @X0 0 ef ]
-"19
-[v _get_USART_char `(uc ~T0 @X0 0 ef ]
+[v _USART_Init `(v ~T0 @X0 0 ef1`i ]
 "3669 /opt/microchip/xc8/v1.12/include/pic16f886.h
 [v _RB5 `Vb ~T0 @X0 0 e@53 ]
 "3153
@@ -14,8 +20,6 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _ANSELH `Vuc ~T0 @X0 0 e@393 ]
 "3861
 [v _TRISB5 `Vb ~T0 @X0 0 e@1077 ]
-"3521
-[v _GIE `Vb ~T0 @X0 0 e@95 ]
 [; ;stdio.h: 8: typedef int ptrdiff_t;
 [; ;stdio.h: 9: typedef unsigned size_t;
 [; ;stdio.h: 10: typedef unsigned short wchar_t;
@@ -1543,97 +1547,136 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;usart.h: 20: unsigned char get_USART_char_timeout(void);
 [; ;usart.h: 21: void send_USART_char(unsigned char character);
 [; ;usart.h: 22: void send_USART_string(unsigned char const string[]);
-[; ;usart.h: 24: void USART_Init(void);
+[; ;usart.h: 24: void USART_Init(int receiveInterupts );
 [; ;main.h: 35: void picInit();
-"16 main.c
+"13 main.c
+[v _command `uc ~T0 @X0 1 e ]
+[i _command
+-> -> 65 `ui `uc
+]
+[; ;main.c: 13: char command = 'A';
+"16
+[v F1753 `(v ~T0 @X0 1 tf ]
+[v _isr `IF1753 ~T0 @X0 1 e ]
+{
+[; ;main.c: 15: interrupt void isr(void)
+[; ;main.c: 16: {
+[e :U _isr ]
+[f ]
+[; ;main.c: 18: GIE = 0;
+"18
+[e = _GIE -> -> 0 `i `b ]
+[; ;main.c: 19: INTE = 0;
+"19
+[e = _INTE -> -> 0 `i `b ]
+[; ;main.c: 22: if(RCIF)
+"22
+[e $ ! _RCIF 141  ]
+[; ;main.c: 23: {
+"23
+{
+[; ;main.c: 24: command = get_USART_char();
+"24
+[e = _command ( _get_USART_char ..  ]
+"25
+}
+[e :U 141 ]
+[; ;main.c: 25: }
+[; ;main.c: 27: GIE = 1;
+"27
+[e = _GIE -> -> 1 `i `b ]
+[; ;main.c: 28: INTE = 1;
+"28
+[e = _INTE -> -> 1 `i `b ]
+[; ;main.c: 29: }
+"29
+[e :UE 140 ]
+}
+"32
 [v _main `(i ~T0 @X0 1 ef2`i`**uc ]
 {
-[; ;main.c: 15: int main(int argc, char** argv)
-[; ;main.c: 16: {
+[; ;main.c: 31: int main(int argc, char** argv)
+[; ;main.c: 32: {
 [e :U _main ]
 [v _argc `i ~T0 @X0 1 r1 ]
 [v _argv `**uc ~T0 @X0 1 r2 ]
 [f ]
-[; ;main.c: 18: picInit();
-"18
-[e ( _picInit ..  ]
-[; ;main.c: 21: USART_Init();
-"21
-[e ( _USART_Init ..  ]
-[; ;main.c: 23: while(1)
-"23
-[e :U 142 ]
-[; ;main.c: 24: {
-"24
-{
-"25
-[v _command `uc ~T0 @X0 1 a ]
-[; ;main.c: 25: char command = get_USART_char();
-[e = _command ( _get_USART_char ..  ]
-[; ;main.c: 26: if(command == 'A')
-"26
-[e $ ! == -> _command `ui -> 65 `ui 144  ]
-[; ;main.c: 27: {
-"27
-{
-[; ;main.c: 28: RB5 = 1;
-"28
-[e = _RB5 -> -> 1 `i `b ]
-"29
-}
-[; ;main.c: 29: }
-[e $U 145  ]
-"30
-[e :U 144 ]
-[; ;main.c: 30: else
-[; ;main.c: 31: {
-"31
-{
-[; ;main.c: 32: RB5 = 0;
-"32
-[e = _RB5 -> -> 0 `i `b ]
+[; ;main.c: 34: picInit();
 "34
-}
-[e :U 145 ]
-"35
-}
-[e :U 141 ]
-"23
-[e $U 142  ]
-[e :U 143 ]
-[; ;main.c: 34: }
-[; ;main.c: 35: }
-[; ;main.c: 37: return (0);
+[e ( _picInit ..  ]
+[; ;main.c: 37: USART_Init(1);
 "37
-[e ) -> 0 `i ]
-[e $UE 140  ]
-[; ;main.c: 38: }
-"38
-[e :UE 140 ]
-}
+[e ( _USART_Init (1 -> 1 `i ]
+[; ;main.c: 39: while(1)
+"39
+[e :U 144 ]
+[; ;main.c: 40: {
+"40
+{
+[; ;main.c: 42: if(command == 'A')
+"42
+[e $ ! == -> _command `ui -> 65 `ui 146  ]
+[; ;main.c: 43: {
 "43
+{
+[; ;main.c: 44: RB5 = 1;
+"44
+[e = _RB5 -> -> 1 `i `b ]
+"45
+}
+[; ;main.c: 45: }
+[e $U 147  ]
+"46
+[e :U 146 ]
+[; ;main.c: 46: else
+[; ;main.c: 47: {
+"47
+{
+[; ;main.c: 48: RB5 = 0;
+"48
+[e = _RB5 -> -> 0 `i `b ]
+"50
+}
+[e :U 147 ]
+"51
+}
+[e :U 143 ]
+"39
+[e $U 144  ]
+[e :U 145 ]
+[; ;main.c: 50: }
+[; ;main.c: 51: }
+[; ;main.c: 53: return (0);
+"53
+[e ) -> 0 `i ]
+[e $UE 142  ]
+[; ;main.c: 54: }
+"54
+[e :UE 142 ]
+}
+"59
 [v _picInit `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 42: void picInit()
-[; ;main.c: 43: {
+[; ;main.c: 58: void picInit()
+[; ;main.c: 59: {
 [e :U _picInit ]
 [f ]
-[; ;main.c: 46: ANSEL = 0;
-"46
+[; ;main.c: 62: ANSEL = 0;
+"62
 [e = _ANSEL -> -> 0 `i `uc ]
-[; ;main.c: 47: ANSELH = 0;
-"47
+[; ;main.c: 63: ANSELH = 0;
+"63
 [e = _ANSELH -> -> 0 `i `uc ]
-[; ;main.c: 50: TRISB5 = 0;
-"50
+[; ;main.c: 66: TRISB5 = 0;
+"66
 [e = _TRISB5 -> -> 0 `i `b ]
-[; ;main.c: 53: GIE = 0;
-"53
+[; ;main.c: 69: GIE = 0;
+"69
 [e = _GIE -> -> 0 `i `b ]
-[; ;main.c: 55: return;
-"55
-[e $UE 146  ]
-[; ;main.c: 56: }
-"56
-[e :UE 146 ]
+[; ;main.c: 71: return;
+"71
+[e $UE 148  ]
+[; ;main.c: 72: }
+"72
+[e :UE 148 ]
 }

@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////
 //USART INITIALIZATION
 
-void USART_Init(void)
+void USART_Init(int receiveInterupts)
 {
     //Set portc7 for input and portc6 for output
     TRISC7 = 1;
@@ -59,8 +59,18 @@ void USART_Init(void)
 
     //Additional configuration
     TXIE=0;		//Disable TX interrupts
-    RCIE=0;		//Disable RX interrupts
 
+    if(receiveInterupts)
+    {
+        //Enable receive interrupts(as well as global and peripheral)
+        RCIE = 1;
+        GIE = 1;
+        PEIE = 1;
+    }
+    else
+    {
+        RCIE = 0;       //Disable receive interrupts
+    }
     TXEN=0;		//Reset transmitter
     //__delay_us(2);
     TXEN=1;
@@ -98,48 +108,48 @@ void Set_SPBRG(void)
 //RECIEVE COMMANDS
 unsigned char get_USART_char(void)
 {
-	do
-	{clear_usart_errors();}
-	while(RCIF == 0);  //Continously reset errors until full byte is recieved
+    do
+    {clear_usart_errors();}
+    while(RCIF == 0);  //Continously reset errors until full byte is recieved
 
-	return RCREG;	//Upon reading RCREG, RCIF flag is reset
+    return RCREG;	//Upon reading RCREG, RCIF flag is reset
 }
 
 
 unsigned char get_USART_char_timeout(void)
 {
-	//Recieve one byte with a timeout
-	for(unsigned int timeout_int = 0xFFFF; timeout_int != 0; timeout_int--)
-	{
-		if (RCIF == 1)	//Continuously check if byte was recieved
-		{return RCREG;}
-		clear_usart_errors();
-	}
+    //Recieve one byte with a timeout
+    for(unsigned int timeout_int = 0xFFFF; timeout_int != 0; timeout_int--)
+    {
+            if (RCIF == 1)	//Continuously check if byte was recieved
+            {return RCREG;}
+            clear_usart_errors();
+    }
 
-	//dummy = RCREG;		//Flush RCREG
-	return 0;			//If no byte was recieved within time limit, return 0.
+    //dummy = RCREG;		//Flush RCREG
+    return 0;			//If no byte was recieved within time limit, return 0.
 }
 
 
 //TRANSMIT COMMANDS
 void send_USART_char(unsigned char character)
 {
-	do 		//while the TXREG is full
-	{clear_usart_errors();}  	//Continously reset errors
-	while(TXIF == 0);
+    do 		//while the TXREG is full
+    {clear_usart_errors();}  	//Continously reset errors
+    while(TXIF == 0);
 
-	TXREG = character;		//Write character out to USART
-	//__delay_ms((8/BAUD_RATE)*1000);			//Wait for transmission
-	//__delay_ms(1);
+    TXREG = character;		//Write character out to USART
+    //__delay_ms((8/BAUD_RATE)*1000);			//Wait for transmission
+    //__delay_ms(1);
 
-	return;
+    return;
 }
 
 void send_USART_string(unsigned char const string[])
 {
-	for(unsigned char iter = 0 ; iter < strlen(string) ; iter++)
-	{send_USART_char(string[iter]);}
-	return;
+    for(unsigned char iter = 0 ; iter < strlen(string) ; iter++)
+    {send_USART_char(string[iter]);}
+    return;
 }
 
 
@@ -151,18 +161,18 @@ void clear_usart_errors(void)
     //Dummy byte for flushing the RCREG
     char dummy;
     if (OERR == 1)
-            {
-                    TXEN=0;				//Reset transmitter
-                    TXEN=1;
-                    CREN=0;				//Reset continous recieve
-                    CREN=1;
-            }
+    {
+            TXEN=0;				//Reset transmitter
+            TXEN=1;
+            CREN=0;				//Reset continous recieve
+            CREN=1;
+    }
     if (FERR == 1)
-            {
-                    dummy=RCREG;		//Flush RCREG
-                    TXEN=0;				//Reset transmitter
-                    TXEN=1;
-            }
+    {
+            dummy=RCREG;		//Flush RCREG
+            TXEN=0;				//Reset transmitter
+            TXEN=1;
+    }
     return;
 }
 
