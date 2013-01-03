@@ -35,15 +35,21 @@ int main(int argc, char** argv)
     
     //Init usart for transmit and receive
     USART_Init(1);
-    
+
+    //Init motor
+    motorInit();
+
     while(1)
     {
         if(command == 'A')
         {
             RB5 = 1;
+            //setSpeed(255, 1);
         }
         else
         {
+
+            //setSpeed(128, 1);
             RB5 = 0;
         
         }

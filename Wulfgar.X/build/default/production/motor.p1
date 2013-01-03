@@ -1,111 +1,24 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"3521 /opt/microchip/xc8/v1.12/include/pic16f886.h
-[v _GIE `Vb ~T0 @X0 0 e@95 ]
-"3539
-[v _INTE `Vb ~T0 @X0 0 e@92 ]
-"3707
-[v _RCIF `Vb ~T0 @X0 0 e@101 ]
-"19 usart.h
-[v _get_USART_char `(uc ~T0 @X0 0 ef ]
-[p mainexit ]
-"41 main.h
-[v _picInit `(v ~T0 @X0 0 ef ]
-"24 usart.h
-[v _USART_Init `(v ~T0 @X0 0 ef1`i ]
-"11 motor.h
-[v _motorInit `(v ~T0 @X0 0 ef ]
-"3669 /opt/microchip/xc8/v1.12/include/pic16f886.h
-[v _RB5 `Vb ~T0 @X0 0 e@53 ]
-"3153
-[v _ANSEL `Vuc ~T0 @X0 0 e@392 ]
-"3196
-[v _ANSELH `Vuc ~T0 @X0 0 e@393 ]
-"3861
-[v _TRISB5 `Vb ~T0 @X0 0 e@1077 ]
-[; ;stdio.h: 8: typedef int ptrdiff_t;
-[; ;stdio.h: 9: typedef unsigned size_t;
-[; ;stdio.h: 10: typedef unsigned short wchar_t;
-[; ;stdarg.h: 7: typedef void * va_list[1];
-[; ;stdarg.h: 10: extern void * __va_start(void);
-[; ;stdarg.h: 13: extern void * __va_arg(void *, ...);
-[; ;stdio.h: 23: extern int errno;
-[; ;stdio.h: 54: struct __prbuf
-[; ;stdio.h: 55: {
-[; ;stdio.h: 56: char * ptr;
-[; ;stdio.h: 57: void (* func)(char);
-[; ;stdio.h: 58: };
-[; ;conio.h: 17: extern int errno;
-[; ;conio.h: 20: extern void init_uart(void);
-[; ;conio.h: 22: extern char getch(void);
-[; ;conio.h: 23: extern char getche(void);
-[; ;conio.h: 24: extern void putch(char);
-[; ;conio.h: 25: extern void ungetch(char);
-[; ;conio.h: 27: extern __bit kbhit(void);
-[; ;conio.h: 31: extern char * cgets(char *);
-[; ;conio.h: 32: extern void cputs(const char *);
-[; ;stdio.h: 99: extern int cprintf(char *, ...);
-[; ;stdio.h: 104: extern int _doprnt(struct __prbuf *, const register char *, register va_list);
-[; ;stdio.h: 194: extern char * gets(char *);
-[; ;stdio.h: 195: extern int puts(const char *);
-[; ;stdio.h: 196: extern int scanf(const char *, ...);
-[; ;stdio.h: 197: extern int sscanf(const char *, const char *, ...);
-[; ;stdio.h: 198: extern int vprintf(const char *, va_list);
-[; ;stdio.h: 199: extern int vsprintf(char *, const char *, va_list) __attribute__((unsupported("vsprintf() is not supported by this compiler")));
-[; ;stdio.h: 200: extern int vscanf(const char *, va_list ap);
-[; ;stdio.h: 201: extern int vsscanf(const char *, const char *, va_list);
-[; ;stdio.h: 205: extern int sprintf(char *, const char *, ...);
-[; ;stdio.h: 206: extern int printf(const char *, ...);
-[; ;stdlib.h: 27: typedef struct {
-[; ;stdlib.h: 28: int rem;
-[; ;stdlib.h: 29: int quot;
-[; ;stdlib.h: 30: } div_t;
-[; ;stdlib.h: 31: typedef struct {
-[; ;stdlib.h: 32: unsigned rem;
-[; ;stdlib.h: 33: unsigned quot;
-[; ;stdlib.h: 34: } udiv_t;
-[; ;stdlib.h: 35: typedef struct {
-[; ;stdlib.h: 36: long quot;
-[; ;stdlib.h: 37: long rem;
-[; ;stdlib.h: 38: } ldiv_t;
-[; ;stdlib.h: 39: typedef struct {
-[; ;stdlib.h: 40: unsigned long quot;
-[; ;stdlib.h: 41: unsigned long rem;
-[; ;stdlib.h: 42: } uldiv_t;
-[; ;stdlib.h: 65: extern double atof(const char *);
-[; ;stdlib.h: 66: extern double strtod(const char *, const char **);
-[; ;stdlib.h: 67: extern int atoi(const char *);
-[; ;stdlib.h: 68: extern unsigned xtoi(const char *);
-[; ;stdlib.h: 69: extern long atol(const char *);
-[; ;stdlib.h: 70: extern long strtol(const char *, char **, int);
-[; ;stdlib.h: 72: extern int rand(void);
-[; ;stdlib.h: 73: extern void srand(unsigned int);
-[; ;stdlib.h: 74: extern void * calloc(size_t, size_t);
-[; ;stdlib.h: 75: extern div_t div(int numer, int denom);
-[; ;stdlib.h: 76: extern udiv_t udiv(unsigned numer, unsigned denom);
-[; ;stdlib.h: 77: extern ldiv_t ldiv(long numer, long denom);
-[; ;stdlib.h: 78: extern uldiv_t uldiv(unsigned long numer,unsigned long denom);
-[; ;stdlib.h: 79: extern unsigned long _lrotl(unsigned long value, unsigned int shift);
-[; ;stdlib.h: 80: extern unsigned long _lrotr(unsigned long value, unsigned int shift);
-[; ;stdlib.h: 81: extern unsigned int _rotl(unsigned int value, unsigned int shift);
-[; ;stdlib.h: 82: extern unsigned int _rotr(unsigned int value, unsigned int shift);
-[; ;stdlib.h: 87: extern void * malloc(size_t);
-[; ;stdlib.h: 88: extern void free(void *);
-[; ;stdlib.h: 89: extern void * realloc(void *, size_t);
-[; ;stdlib.h: 91: extern void abort(void);
-[; ;stdlib.h: 92: extern void exit(int);
-[; ;stdlib.h: 93: extern int atexit(void (*)(void));
-[; ;stdlib.h: 94: extern char * getenv(const char *);
-[; ;stdlib.h: 95: extern char ** environ;
-[; ;stdlib.h: 96: extern int system(char *);
-[; ;stdlib.h: 97: extern void qsort(void *, size_t, size_t, int (*)(const void *, const void *));
-[; ;stdlib.h: 98: extern void * bsearch(const void *, void *, size_t, size_t, int(*)(const void *, const void *));
-[; ;stdlib.h: 99: extern int abs(int);
-[; ;stdlib.h: 100: extern long labs(long);
-[; ;stdlib.h: 103: extern char * itoa(char * buf, int val, int base);
-[; ;stdlib.h: 104: extern char * utoa(char * buf, unsigned val, int base);
-[; ;stdlib.h: 109: extern char * ltoa(char * buf, long val, int base);
-[; ;stdlib.h: 110: extern char * ultoa(char * buf, unsigned long val, int base);
-[; ;stdlib.h: 112: extern char * ftoa(float f, int * status);
+"3835 /opt/microchip/xc8/v1.12/include/pic16f886.h
+[v _TRISA0 `Vb ~T0 @X0 0 e@1064 ]
+"3837
+[v _TRISA1 `Vb ~T0 @X0 0 e@1065 ]
+"3839
+[v _TRISA2 `Vb ~T0 @X0 0 e@1066 ]
+"3841
+[v _TRISA3 `Vb ~T0 @X0 0 e@1067 ]
+"3643
+[v _RA0 `Vb ~T0 @X0 0 e@40 ]
+"3645
+[v _RA1 `Vb ~T0 @X0 0 e@41 ]
+"3647
+[v _RA2 `Vb ~T0 @X0 0 e@42 ]
+"3649
+[v _RA3 `Vb ~T0 @X0 0 e@43 ]
+"11 pwm.h
+[v _pwmInit `(v ~T0 @X0 0 ef ]
+"12
+[v _setDutyCycle `(v ~T0 @X0 0 ef2`uc`uc ]
 [; ;pic16f886.h: 44: extern volatile unsigned char INDF @ 0x000;
 "46 /opt/microchip/xc8/v1.12/include/pic16f886.h
 [; ;pic16f886.h: 46: asm("INDF equ 00h");
@@ -1519,160 +1432,174 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;eeprom_routines.h: 43: extern void eecpymem(volatile unsigned char *to, __eeprom unsigned char *from, unsigned char size);
 [; ;eeprom_routines.h: 44: extern void memcpyee(__eeprom unsigned char *to, const unsigned char *from, unsigned char size);
 [; ;pic.h: 151: extern void _delay(unsigned long);
-"33 main.h
-[p x FOSC=INTRC_NOCLKOUT ]
-[p x WDTE=OFF ]
-[p x BOREN=OFF ]
-[p x IESO=OFF ]
-[p x FCMEN=OFF ]
-[p x LVP=OFF ]
-"34
-[p x BOR4V=BOR21V ]
-[; ;main.h: 33: __config("__CONFIG", "pic", "FOSC_INTRC_NOCLKOUT & WDTE_OFF & PWRTE_OFF & MCLRE_ON & CP_OFF & CPD_OFF & BOREN_OFF & IESO_OFF & FCMEN_OFF & LVP_OFF");
-[; ;main.h: 34: __config("__CONFIG", "pic", "BOR4V_BOR21V & WRT_OFF");
-[; ;usart.h: 17: void Set_SPBRG(void);
-[; ;usart.h: 18: void clear_usart_errors(void);
-[; ;usart.h: 19: unsigned char get_USART_char(void);
-[; ;usart.h: 20: unsigned char get_USART_char_timeout(void);
-[; ;usart.h: 21: void send_USART_char(unsigned char character);
-[; ;usart.h: 22: void send_USART_string(unsigned char const string[]);
-[; ;usart.h: 24: void USART_Init(int receiveInterupts );
 [; ;pwm.h: 11: void pwmInit(void);
 [; ;pwm.h: 12: void setDutyCycle(char value, char module);
 [; ;motor.h: 11: void motorInit(void);
 [; ;motor.h: 12: void setSpeed(char speed, char motor);
-[; ;main.h: 41: void picInit();
-"13 main.c
-[v _command `uc ~T0 @X0 1 e ]
-[i _command
--> -> 65 `ui `uc
-]
-[; ;main.c: 13: char command = 'A';
-"16
-[v F1763 `(v ~T0 @X0 1 tf ]
-[v _isr `IF1763 ~T0 @X0 1 e ]
+"21 motor.c
+[v _motorInit `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 15: interrupt void isr(void)
-[; ;main.c: 16: {
-[e :U _isr ]
+[; ;motor.c: 20: void motorInit(void)
+[; ;motor.c: 21: {
+[e :U _motorInit ]
 [f ]
-[; ;main.c: 18: GIE = 0;
-"18
-[e = _GIE -> -> 0 `i `b ]
-[; ;main.c: 19: INTE = 0;
-"19
-[e = _INTE -> -> 0 `i `b ]
-[; ;main.c: 22: if(RCIF)
-"22
-[e $ ! _RCIF 141  ]
-[; ;main.c: 23: {
+[; ;motor.c: 23: TRISA0 = 0;
 "23
-{
-[; ;main.c: 24: command = get_USART_char();
+[e = _TRISA0 -> -> 0 `i `b ]
+[; ;motor.c: 24: TRISA1 = 0;
 "24
-[e = _command ( _get_USART_char ..  ]
+[e = _TRISA1 -> -> 0 `i `b ]
+[; ;motor.c: 25: TRISA2 = 0;
 "25
+[e = _TRISA2 -> -> 0 `i `b ]
+[; ;motor.c: 26: TRISA3 = 0;
+"26
+[e = _TRISA3 -> -> 0 `i `b ]
+[; ;motor.c: 28: RA0 = 1;
+"28
+[e = _RA0 -> -> 1 `i `b ]
+[; ;motor.c: 29: RA1 = 0;
+"29
+[e = _RA1 -> -> 0 `i `b ]
+[; ;motor.c: 30: RA2 = 1;
+"30
+[e = _RA2 -> -> 1 `i `b ]
+[; ;motor.c: 31: RA3 = 0;
+"31
+[e = _RA3 -> -> 0 `i `b ]
+[; ;motor.c: 33: pwmInit();
+"33
+[e ( _pwmInit ..  ]
+[; ;motor.c: 35: }
+"35
+[e :UE 135 ]
+}
+"38
+[v _setSpeed `(v ~T0 @X0 1 ef2`uc`uc ]
+{
+[; ;motor.c: 37: void setSpeed(char speed, char motor)
+[; ;motor.c: 38: {
+[e :U _setSpeed ]
+[v _speed `uc ~T0 @X0 1 r1 ]
+[v _motor `uc ~T0 @X0 1 r2 ]
+[f ]
+[; ;motor.c: 39: if(speed == 127 || speed == 128)
+"39
+[e $ ! || == -> _speed `i -> 127 `i == -> _speed `i -> 128 `i 137  ]
+[; ;motor.c: 40: {
+"40
+{
+[; ;motor.c: 41: setDutyCycle(0, motor);
+"41
+[e ( _setDutyCycle (2 , -> -> 0 `i `uc _motor ]
+"42
+}
+[; ;motor.c: 42: }
+[e $U 138  ]
+"43
+[e :U 137 ]
+[; ;motor.c: 43: else if(speed > 128)
+[e $ ! > -> _speed `i -> 128 `i 139  ]
+[; ;motor.c: 44: {
+"44
+{
+[; ;motor.c: 45: if(motor == 1)
+"45
+[e $ ! == -> _motor `i -> 1 `i 140  ]
+[; ;motor.c: 46: {
+"46
+{
+[; ;motor.c: 47: RA0 = 1;
+"47
+[e = _RA0 -> -> 1 `i `b ]
+[; ;motor.c: 48: RA1 = 0;
+"48
+[e = _RA1 -> -> 0 `i `b ]
+"49
+}
+[; ;motor.c: 49: }
+[e $U 141  ]
+"50
+[e :U 140 ]
+[; ;motor.c: 50: else
+[; ;motor.c: 51: {
+"51
+{
+[; ;motor.c: 52: RA2 = 1;
+"52
+[e = _RA2 -> -> 1 `i `b ]
+[; ;motor.c: 53: RA3 = 0;
+"53
+[e = _RA3 -> -> 0 `i `b ]
+"54
 }
 [e :U 141 ]
-[; ;main.c: 25: }
-[; ;main.c: 27: GIE = 1;
-"27
-[e = _GIE -> -> 1 `i `b ]
-[; ;main.c: 28: INTE = 1;
-"28
-[e = _INTE -> -> 1 `i `b ]
-[; ;main.c: 29: }
-"29
-[e :UE 140 ]
-}
-"32
-[v _main `(i ~T0 @X0 1 ef2`i`**uc ]
-{
-[; ;main.c: 31: int main(int argc, char** argv)
-[; ;main.c: 32: {
-[e :U _main ]
-[v _argc `i ~T0 @X0 1 r1 ]
-[v _argv `**uc ~T0 @X0 1 r2 ]
-[f ]
-[; ;main.c: 34: picInit();
-"34
-[e ( _picInit ..  ]
-[; ;main.c: 37: USART_Init(1);
-"37
-[e ( _USART_Init (1 -> 1 `i ]
-[; ;main.c: 40: motorInit();
-"40
-[e ( _motorInit ..  ]
-[; ;main.c: 42: while(1)
-"42
-[e :U 144 ]
-[; ;main.c: 43: {
-"43
-{
-[; ;main.c: 44: if(command == 'A')
-"44
-[e $ ! == -> _command `ui -> 65 `ui 146  ]
-[; ;main.c: 45: {
-"45
-{
-[; ;main.c: 46: RB5 = 1;
-"46
-[e = _RB5 -> -> 1 `i `b ]
-"48
-}
-[; ;main.c: 48: }
-[e $U 147  ]
-"49
-[e :U 146 ]
-[; ;main.c: 49: else
-[; ;main.c: 50: {
-"50
-{
-[; ;main.c: 53: RB5 = 0;
-"53
-[e = _RB5 -> -> 0 `i `b ]
+[; ;motor.c: 54: }
+[; ;motor.c: 55: speed = speed - 129;
 "55
-}
-[e :U 147 ]
+[e = _speed -> - -> _speed `i -> 129 `i `uc ]
+[; ;motor.c: 56: speed = speed << 2;
 "56
+[e = _speed -> << -> _speed `i -> 2 `i `uc ]
+[; ;motor.c: 57: setDutyCycle(speed, motor);
+"57
+[e ( _setDutyCycle (2 , _speed _motor ]
+"58
+}
+[; ;motor.c: 58: }
+[e $U 142  ]
+"59
+[e :U 139 ]
+[; ;motor.c: 59: else if(speed < 127)
+[e $ ! < -> _speed `i -> 127 `i 143  ]
+[; ;motor.c: 60: {
+"60
+{
+[; ;motor.c: 61: if(motor == 1)
+"61
+[e $ ! == -> _motor `i -> 1 `i 144  ]
+[; ;motor.c: 62: {
+"62
+{
+[; ;motor.c: 63: RA0 = 0;
+"63
+[e = _RA0 -> -> 0 `i `b ]
+[; ;motor.c: 64: RA1 = 1;
+"64
+[e = _RA1 -> -> 1 `i `b ]
+"65
+}
+[; ;motor.c: 65: }
+[e $U 145  ]
+"66
+[e :U 144 ]
+[; ;motor.c: 66: else
+[; ;motor.c: 67: {
+"67
+{
+[; ;motor.c: 68: RA2 = 0;
+"68
+[e = _RA2 -> -> 0 `i `b ]
+[; ;motor.c: 69: RA3 = 1;
+"69
+[e = _RA3 -> -> 1 `i `b ]
+"70
+}
+[e :U 145 ]
+[; ;motor.c: 70: }
+[; ;motor.c: 71: speed = speed << 2;
+"71
+[e = _speed -> << -> _speed `i -> 2 `i `uc ]
+[; ;motor.c: 72: setDutyCycle(speed, motor);
+"72
+[e ( _setDutyCycle (2 , _speed _motor ]
+"73
 }
 [e :U 143 ]
-"42
-[e $U 144  ]
-[e :U 145 ]
-[; ;main.c: 55: }
-[; ;main.c: 56: }
-[; ;main.c: 58: return (0);
-"58
-[e ) -> 0 `i ]
-[e $UE 142  ]
-[; ;main.c: 59: }
-"59
-[e :UE 142 ]
-}
-"64
-[v _picInit `(v ~T0 @X0 1 ef ]
-{
-[; ;main.c: 63: void picInit()
-[; ;main.c: 64: {
-[e :U _picInit ]
-[f ]
-[; ;main.c: 67: ANSEL = 0;
-"67
-[e = _ANSEL -> -> 0 `i `uc ]
-[; ;main.c: 68: ANSELH = 0;
-"68
-[e = _ANSELH -> -> 0 `i `uc ]
-[; ;main.c: 71: TRISB5 = 0;
-"71
-[e = _TRISB5 -> -> 0 `i `b ]
-[; ;main.c: 74: GIE = 0;
 "74
-[e = _GIE -> -> 0 `i `b ]
-[; ;main.c: 76: return;
-"76
-[e $UE 148  ]
-[; ;main.c: 77: }
-"77
-[e :UE 148 ]
+[e :U 142 ]
+[e :U 138 ]
+[; ;motor.c: 73: }
+[; ;motor.c: 74: }
+[e :UE 136 ]
 }

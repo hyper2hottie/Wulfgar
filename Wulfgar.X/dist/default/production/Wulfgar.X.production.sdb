@@ -3,7 +3,7 @@
 [d edition pro ]
 [d chip 16F886 ]
 "16 main.c
-[v F1753 `(v  1 t 0 ]
+[v F1763 `(v  1 t 0 ]
 "5 /opt/microchip/xc8/v1.12/sources/abdiv.c
 [v ___abdiv `(c  1 e 1 0 ]
 "5 /opt/microchip/xc8/v1.12/sources/abmod.c
@@ -110,8 +110,16 @@
 [v _isr `II(v  1 e 0 0 ]
 "32
 [v _main `(i  1 e 2 0 ]
-"59
+"64
 [v _picInit `(v  1 e 0 0 ]
+"21 motor.c
+[v _motorInit `(v  1 e 0 0 ]
+"38
+[v _setSpeed `(v  1 e 0 0 ]
+"20 pwm.c
+[v _pwmInit `(v  1 e 0 0 ]
+"73
+[v _setDutyCycle `(v  1 e 0 0 ]
 "20 usart.c
 [v _USART_Init `(v  1 e 0 0 ]
 "83
@@ -126,10 +134,22 @@
 [v _send_USART_string `(v  1 e 0 0 ]
 "160
 [v _clear_usart_errors `(v  1 e 0 0 ]
-"1022 /opt/microchip/xc8/v1.12/include/pic16f886.h
+"669 /opt/microchip/xc8/v1.12/include/pic16f886.h
+[v _T2CON `VEuc  1 e 1 @18 ]
+"820
+[v _CCPR1L `VEuc  1 e 1 @21 ]
+"832
+[v _CCP1CON `VEuc  1 e 1 @23 ]
+"1022
 [v _TXREG `VEuc  1 e 1 @25 ]
 "1028
 [v _RCREG `VEuc  1 e 1 @26 ]
+"1040
+[v _CCPR2L `VEuc  1 e 1 @27 ]
+"1052
+[v _CCP2CON `VEuc  1 e 1 @29 ]
+"1832
+[v _PR2 `VEuc  1 e 1 @146 ]
 "2425
 [v _SPBRG `VEuc  1 e 1 @153 ]
 "2486
@@ -154,6 +174,14 @@
 [v _OERR `VEb  1 e 0 @193 ]
 "3617
 [v _PEIE `VEb  1 e 0 @94 ]
+"3643
+[v _RA0 `VEb  1 e 0 @40 ]
+"3645
+[v _RA1 `VEb  1 e 0 @41 ]
+"3647
+[v _RA2 `VEb  1 e 0 @42 ]
+"3649
+[v _RA3 `VEb  1 e 0 @43 ]
 "3669
 [v _RB5 `VEb  1 e 0 @53 ]
 "3705
@@ -166,8 +194,24 @@
 [v _SPEN `VEb  1 e 0 @199 ]
 "3777
 [v _SYNC `VEb  1 e 0 @1220 ]
+"3821
+[v _TMR2IE `VEb  1 e 0 @1121 ]
+"3823
+[v _TMR2IF `VEb  1 e 0 @97 ]
+"3835
+[v _TRISA0 `VEb  1 e 0 @1064 ]
+"3837
+[v _TRISA1 `VEb  1 e 0 @1065 ]
+"3839
+[v _TRISA2 `VEb  1 e 0 @1066 ]
+"3841
+[v _TRISA3 `VEb  1 e 0 @1067 ]
 "3861
 [v _TRISB5 `VEb  1 e 0 @1077 ]
+"3869
+[v _TRISC1 `VEb  1 e 0 @1081 ]
+"3871
+[v _TRISC2 `VEb  1 e 0 @1082 ]
 "3879
 [v _TRISC6 `VEb  1 e 0 @1086 ]
 "3881
@@ -203,12 +247,12 @@
 {
 [v main@argc `i  1 p 2 2 ]
 [v main@argv `**uc  1 p 2 4 ]
-"54
-} 0
 "59
+} 0
+"64
 [v _picInit `(v  1 e 0 0 ]
 {
-"72
+"77
 } 0
 "20 usart.c
 [v _USART_Init `(v  1 e 0 0 ]
@@ -216,10 +260,20 @@
 [v USART_Init@receiveInterupts `i  1 p 2 0 ]
 "79
 } 0
-"83
+"21 motor.c
+[v _motorInit `(v  1 e 0 0 ]
+{
+"35
+} 0
+"83 usart.c
 [v _Set_SPBRG `(v  1 e 0 0 ]
 {
 "102
+} 0
+"20 pwm.c
+[v _pwmInit `(v  1 e 0 0 ]
+{
+"66
 } 0
 "16 main.c
 [v _isr `II(v  1 e 0 0 ]
