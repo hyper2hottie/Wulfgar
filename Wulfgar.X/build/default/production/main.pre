@@ -2135,25 +2135,32 @@ void motorInit(void);
 void setSpeed(char speed, char motor);
 
 # 41 "main.h"
+void interrupt isr(void);
+
+
 void picInit();
 
 # 13 "main.c"
 char command = 'A';
 
-interrupt void isr(void)
+void interrupt isr(void)
 {
 
-GIE = 0;
-INTE = 0;
-
-
+# 22
 if(RCIF)
 {
 command = get_USART_char();
 }
+else if(TMR2IF)
+{
 
-GIE = 1;
-INTE = 1;
+TMR2IF = 0;
+}
+
+
+
+
+return;
 }
 
 int main(int argc, char** argv)
@@ -2172,13 +2179,12 @@ while(1)
 if(command == 'A')
 {
 RB5 = 1;
-
+setSpeed(255, 1);
 }
 else
 {
-
-
 RB5 = 0;
+setSpeed(128, 1);
 
 }
 }

@@ -24,7 +24,7 @@ void motorInit(void)
     TRISA1 = 0;
     TRISA2 = 0;
     TRISA3 = 0;
-
+    
     RA0 = 1;
     RA1 = 0;
     RA2 = 1;

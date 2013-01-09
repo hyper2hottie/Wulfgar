@@ -26,10 +26,10 @@ void pwmInit()
     PR2 = 0b11111111;
 
     //Start with a zero duty cycle
-    //CCPR1L = 0b00000000;
-    //CCPR2L = 0b00000000;
-    CCPR1L = 0b111111111;
-    CCPR2L = 0b111111111;
+    CCPR1L = 0b00000000;
+    CCPR2L = 0b00000000;
+    //CCPR1L = 0b111111111;
+    //CCPR2L = 0b111111111;
     
     //7-6=00->Single output, p1a modulated
     //5-4=00->lsb's of pwm duty cycle
@@ -57,9 +57,7 @@ void pwmInit()
 
     //Wait for timer2 to overflow, then enable CCPx output
     while(!TMR2IF)
-    {
-        int temp = 1;
-    }
+    { }
     TRISC1 = 0;
     TRISC2 = 0;
     

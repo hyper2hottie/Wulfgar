@@ -1,14 +1,12 @@
 Version 3.2 HI-TECH Software Intermediate Code
-"3521 /opt/microchip/xc8/v1.12/include/pic16f886.h
-[v _GIE `Vb ~T0 @X0 0 e@95 ]
-"3539
-[v _INTE `Vb ~T0 @X0 0 e@92 ]
-"3707
+"3707 /opt/microchip/xc8/v1.12/include/pic16f886.h
 [v _RCIF `Vb ~T0 @X0 0 e@101 ]
 "19 usart.h
 [v _get_USART_char `(uc ~T0 @X0 0 ef ]
+"3823 /opt/microchip/xc8/v1.12/include/pic16f886.h
+[v _TMR2IF `Vb ~T0 @X0 0 e@97 ]
 [p mainexit ]
-"41 main.h
+"44 main.h
 [v _picInit `(v ~T0 @X0 0 ef ]
 "24 usart.h
 [v _USART_Init `(v ~T0 @X0 0 ef1`i ]
@@ -16,12 +14,16 @@ Version 3.2 HI-TECH Software Intermediate Code
 [v _motorInit `(v ~T0 @X0 0 ef ]
 "3669 /opt/microchip/xc8/v1.12/include/pic16f886.h
 [v _RB5 `Vb ~T0 @X0 0 e@53 ]
-"3153
+"12 motor.h
+[v _setSpeed `(v ~T0 @X0 0 ef2`uc`uc ]
+"3153 /opt/microchip/xc8/v1.12/include/pic16f886.h
 [v _ANSEL `Vuc ~T0 @X0 0 e@392 ]
 "3196
 [v _ANSELH `Vuc ~T0 @X0 0 e@393 ]
 "3861
 [v _TRISB5 `Vb ~T0 @X0 0 e@1077 ]
+"3521
+[v _GIE `Vb ~T0 @X0 0 e@95 ]
 [; ;stdio.h: 8: typedef int ptrdiff_t;
 [; ;stdio.h: 9: typedef unsigned size_t;
 [; ;stdio.h: 10: typedef unsigned short wchar_t;
@@ -1541,27 +1543,23 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pwm.h: 12: void setDutyCycle(char value, char module);
 [; ;motor.h: 11: void motorInit(void);
 [; ;motor.h: 12: void setSpeed(char speed, char motor);
-[; ;main.h: 41: void picInit();
+[; ;main.h: 41: void interrupt isr(void);
+[; ;main.h: 44: void picInit();
 "13 main.c
 [v _command `uc ~T0 @X0 1 e ]
 [i _command
 -> -> 65 `ui `uc
 ]
 [; ;main.c: 13: char command = 'A';
-"16
-[v F1763 `(v ~T0 @X0 1 tf ]
-[v _isr `IF1763 ~T0 @X0 1 e ]
+"41 main.h
+[v F1761 `(v ~T0 @X0 1 tf ]
+"16 main.c
+[v _isr `IF1761 ~T0 @X0 1 e ]
 {
-[; ;main.c: 15: interrupt void isr(void)
+[; ;main.c: 15: void interrupt isr(void)
 [; ;main.c: 16: {
 [e :U _isr ]
 [f ]
-[; ;main.c: 18: GIE = 0;
-"18
-[e = _GIE -> -> 0 `i `b ]
-[; ;main.c: 19: INTE = 0;
-"19
-[e = _INTE -> -> 0 `i `b ]
 [; ;main.c: 22: if(RCIF)
 "22
 [e $ ! _RCIF 141  ]
@@ -1573,106 +1571,124 @@ Version 3.2 HI-TECH Software Intermediate Code
 [e = _command ( _get_USART_char ..  ]
 "25
 }
-[e :U 141 ]
 [; ;main.c: 25: }
-[; ;main.c: 27: GIE = 1;
+[e $U 142  ]
+"26
+[e :U 141 ]
+[; ;main.c: 26: else if(TMR2IF)
+[e $ ! _TMR2IF 143  ]
+[; ;main.c: 27: {
 "27
-[e = _GIE -> -> 1 `i `b ]
-[; ;main.c: 28: INTE = 1;
-"28
-[e = _INTE -> -> 1 `i `b ]
-[; ;main.c: 29: }
+{
+[; ;main.c: 29: TMR2IF = 0;
 "29
+[e = _TMR2IF -> -> 0 `i `b ]
+"30
+}
+[e :U 143 ]
+"35
+[e :U 142 ]
+[; ;main.c: 30: }
+[; ;main.c: 35: return;
+[e $UE 140  ]
+[; ;main.c: 36: }
+"36
 [e :UE 140 ]
 }
-"32
+"39
 [v _main `(i ~T0 @X0 1 ef2`i`**uc ]
 {
-[; ;main.c: 31: int main(int argc, char** argv)
-[; ;main.c: 32: {
+[; ;main.c: 38: int main(int argc, char** argv)
+[; ;main.c: 39: {
 [e :U _main ]
 [v _argc `i ~T0 @X0 1 r1 ]
 [v _argv `**uc ~T0 @X0 1 r2 ]
 [f ]
-[; ;main.c: 34: picInit();
-"34
+[; ;main.c: 41: picInit();
+"41
 [e ( _picInit ..  ]
-[; ;main.c: 37: USART_Init(1);
-"37
-[e ( _USART_Init (1 -> 1 `i ]
-[; ;main.c: 40: motorInit();
-"40
-[e ( _motorInit ..  ]
-[; ;main.c: 42: while(1)
-"42
-[e :U 144 ]
-[; ;main.c: 43: {
-"43
-{
-[; ;main.c: 44: if(command == 'A')
+[; ;main.c: 44: USART_Init(1);
 "44
-[e $ ! == -> _command `ui -> 65 `ui 146  ]
-[; ;main.c: 45: {
-"45
-{
-[; ;main.c: 46: RB5 = 1;
-"46
-[e = _RB5 -> -> 1 `i `b ]
-"48
-}
-[; ;main.c: 48: }
-[e $U 147  ]
+[e ( _USART_Init (1 -> 1 `i ]
+[; ;main.c: 47: motorInit();
+"47
+[e ( _motorInit ..  ]
+[; ;main.c: 49: while(1)
 "49
 [e :U 146 ]
-[; ;main.c: 49: else
 [; ;main.c: 50: {
 "50
 {
-[; ;main.c: 53: RB5 = 0;
+[; ;main.c: 51: if(command == 'A')
+"51
+[e $ ! == -> _command `ui -> 65 `ui 148  ]
+[; ;main.c: 52: {
+"52
+{
+[; ;main.c: 53: RB5 = 1;
 "53
-[e = _RB5 -> -> 0 `i `b ]
+[e = _RB5 -> -> 1 `i `b ]
+[; ;main.c: 54: setSpeed(255, 1);
+"54
+[e ( _setSpeed (2 , -> -> 255 `i `uc -> -> 1 `i `uc ]
 "55
 }
-[e :U 147 ]
-"56
-}
-[e :U 143 ]
-"42
-[e $U 144  ]
-[e :U 145 ]
 [; ;main.c: 55: }
-[; ;main.c: 56: }
-[; ;main.c: 58: return (0);
+[e $U 149  ]
+"56
+[e :U 148 ]
+[; ;main.c: 56: else
+[; ;main.c: 57: {
+"57
+{
+[; ;main.c: 58: RB5 = 0;
 "58
-[e ) -> 0 `i ]
-[e $UE 142  ]
-[; ;main.c: 59: }
+[e = _RB5 -> -> 0 `i `b ]
+[; ;main.c: 59: setSpeed(128, 1);
 "59
-[e :UE 142 ]
+[e ( _setSpeed (2 , -> -> 128 `i `uc -> -> 1 `i `uc ]
+"61
 }
+[e :U 149 ]
+"62
+}
+[e :U 145 ]
+"49
+[e $U 146  ]
+[e :U 147 ]
+[; ;main.c: 61: }
+[; ;main.c: 62: }
+[; ;main.c: 64: return (0);
 "64
+[e ) -> 0 `i ]
+[e $UE 144  ]
+[; ;main.c: 65: }
+"65
+[e :UE 144 ]
+}
+"70
 [v _picInit `(v ~T0 @X0 1 ef ]
 {
-[; ;main.c: 63: void picInit()
-[; ;main.c: 64: {
+[; ;main.c: 69: void picInit()
+[; ;main.c: 70: {
 [e :U _picInit ]
 [f ]
-[; ;main.c: 67: ANSEL = 0;
-"67
+[; ;main.c: 73: ANSEL = 0;
+"73
 [e = _ANSEL -> -> 0 `i `uc ]
-[; ;main.c: 68: ANSELH = 0;
-"68
-[e = _ANSELH -> -> 0 `i `uc ]
-[; ;main.c: 71: TRISB5 = 0;
-"71
-[e = _TRISB5 -> -> 0 `i `b ]
-[; ;main.c: 74: GIE = 0;
+[; ;main.c: 74: ANSELH = 0;
 "74
-[e = _GIE -> -> 0 `i `b ]
-[; ;main.c: 76: return;
-"76
-[e $UE 148  ]
-[; ;main.c: 77: }
+[e = _ANSELH -> -> 0 `i `uc ]
+[; ;main.c: 77: TRISB5 = 0;
 "77
-[e :UE 148 ]
+[e = _TRISB5 -> -> 0 `i `b ]
+[; ;main.c: 80: GIE = 0;
+"80
+[e = _GIE -> -> 0 `i `b ]
+[; ;main.c: 82: return;
+"82
+[e $UE 150  ]
+[; ;main.c: 83: }
+"83
+[e :UE 150 ]
 }

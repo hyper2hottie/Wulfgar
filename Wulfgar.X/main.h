@@ -37,6 +37,9 @@ __CONFIG(BOR4V_BOR21V & WRT_OFF);
 #include "pwm.h"
 #include "motor.h"
 
+//Interrupt routine
+void interrupt isr(void);
+
 //Initialization function
 void picInit();
 

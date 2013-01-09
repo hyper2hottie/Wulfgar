@@ -12,20 +12,20 @@
 
 char command = 'A';
 
-interrupt void isr(void)
+void interrupt isr(void)
 {
-    //Disable interrupts
-    GIE = 0;
-    INTE = 0;
-
     //Check if this is a usart receive interrupt
     if(RCIF)
     {
         command = get_USART_char();
     }
-    //Reenable interrupts
-    GIE = 1;
-    INTE = 1;
+    else if(TMR2IF)
+    {
+        //Clear timer2 interrupt flag
+        TMR2IF = 0;
+    }
+    
+    return;
 }
 
 int main(int argc, char** argv)
@@ -44,13 +44,12 @@ int main(int argc, char** argv)
         if(command == 'A')
         {
             RB5 = 1;
-            //setSpeed(255, 1);
+            setSpeed(255, 1);
         }
         else
         {
-
-            //setSpeed(128, 1);
             RB5 = 0;
+            setSpeed(128, 1);
         
         }
     }

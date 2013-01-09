@@ -2,8 +2,8 @@
 [d version 1.1 ]
 [d edition pro ]
 [d chip 16F886 ]
-"16 main.c
-[v F1763 `(v  1 t 0 ]
+"41 main.h
+[v F1761 `(v  1 t 0 ]
 "5 /opt/microchip/xc8/v1.12/sources/abdiv.c
 [v ___abdiv `(c  1 e 1 0 ]
 "5 /opt/microchip/xc8/v1.12/sources/abmod.c
@@ -108,9 +108,9 @@
 [v ___fltoee `(d  1 e 3 0 ]
 "16 main.c
 [v _isr `II(v  1 e 0 0 ]
-"32
+"39
 [v _main `(i  1 e 2 0 ]
-"64
+"70
 [v _picInit `(v  1 e 0 0 ]
 "21 motor.c
 [v _motorInit `(v  1 e 0 0 ]
@@ -118,7 +118,7 @@
 [v _setSpeed `(v  1 e 0 0 ]
 "20 pwm.c
 [v _pwmInit `(v  1 e 0 0 ]
-"73
+"71
 [v _setDutyCycle `(v  1 e 0 0 ]
 "20 usart.c
 [v _USART_Init `(v  1 e 0 0 ]
@@ -168,8 +168,6 @@
 [v _FERR `VEb  1 e 0 @194 ]
 "3521
 [v _GIE `VEb  1 e 0 @95 ]
-"3539
-[v _INTE `VEb  1 e 0 @92 ]
 "3591
 [v _OERR `VEb  1 e 0 @193 ]
 "3617
@@ -242,17 +240,17 @@
 [v _WREN `VEb  1 e 0 @3170 ]
 "13 main.c
 [v _command `uc  1 e 1 0 ]
-"32
+"39
 [v _main `(i  1 e 2 0 ]
 {
-[v main@argc `i  1 p 2 2 ]
-[v main@argv `**uc  1 p 2 4 ]
-"59
+[v main@argc `i  1 p 2 6 ]
+[v main@argv `**uc  1 p 2 8 ]
+"65
 } 0
-"64
+"70
 [v _picInit `(v  1 e 0 0 ]
 {
-"77
+"83
 } 0
 "20 usart.c
 [v _USART_Init `(v  1 e 0 0 ]
@@ -265,6 +263,14 @@
 {
 "35
 } 0
+"38
+[v _setSpeed `(v  1 e 0 0 ]
+{
+[v setSpeed@speed `uc  1 a 1 wreg ]
+[v setSpeed@speed `uc  1 a 1 wreg ]
+[v setSpeed@motor `uc  1 p 1 2 ]
+"74
+} 0
 "83 usart.c
 [v _Set_SPBRG `(v  1 e 0 0 ]
 {
@@ -273,12 +279,20 @@
 "20 pwm.c
 [v _pwmInit `(v  1 e 0 0 ]
 {
-"66
+"64
+} 0
+"71
+[v _setDutyCycle `(v  1 e 0 0 ]
+{
+[v setDutyCycle@value `uc  1 a 1 wreg ]
+[v setDutyCycle@value `uc  1 a 1 wreg ]
+[v setDutyCycle@module `uc  1 p 1 0 ]
+"82
 } 0
 "16 main.c
 [v _isr `II(v  1 e 0 0 ]
 {
-"29
+"36
 } 0
 "110 usart.c
 [v _get_USART_char `(uc  1 e 1 0 ]

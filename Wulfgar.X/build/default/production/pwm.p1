@@ -1450,75 +1450,87 @@ Version 3.2 HI-TECH Software Intermediate Code
 [; ;pwm.c: 26: PR2 = 0b11111111;
 "26
 [e = _PR2 -> -> 255 `i `uc ]
-[; ;pwm.c: 31: CCPR1L = 0b111111111;
-"31
-[e = _CCPR1L -> -> 511 `i `uc ]
-[; ;pwm.c: 32: CCPR2L = 0b111111111;
-"32
-[e = _CCPR2L -> -> 511 `i `uc ]
+[; ;pwm.c: 29: CCPR1L = 0b00000000;
+"29
+[e = _CCPR1L -> -> 0 `i `uc ]
+[; ;pwm.c: 30: CCPR2L = 0b00000000;
+"30
+[e = _CCPR2L -> -> 0 `i `uc ]
 [; ;pwm.c: 37: CCP1CON = 0b00001100;
 "37
 [e = _CCP1CON -> -> 12 `i `uc ]
 [; ;pwm.c: 42: CCP2CON = 0b00001100;
 "42
 [e = _CCP2CON -> -> 12 `i `uc ]
-[; ;pwm.c: 44: TRISC1 = 0;
-"44
-[e = _TRISC1 -> -> 0 `i `b ]
-[; ;pwm.c: 45: TRISC2 = 0;
-"45
-[e = _TRISC2 -> -> 0 `i `b ]
-[; ;pwm.c: 48: TMR2IF = 0;
-"48
+[; ;pwm.c: 46: TMR2IF = 0;
+"46
 [e = _TMR2IF -> -> 0 `i `b ]
-[; ;pwm.c: 51: TMR2IE = 0;
-"51
+[; ;pwm.c: 49: TMR2IE = 0;
+"49
 [e = _TMR2IE -> -> 0 `i `b ]
-[; ;pwm.c: 58: T2CON = 0b00000100;
-"58
+[; ;pwm.c: 56: T2CON = 0b00000100;
+"56
 [e = _T2CON -> -> 4 `i `uc ]
-[; ;pwm.c: 66: }
-"66
+[; ;pwm.c: 59: while(!TMR2IF)
+"59
+[e $U 136  ]
+[e :U 137 ]
+[; ;pwm.c: 60: { }
+"60
+{
+}
+[e :U 136 ]
+"59
+[e $ ! _TMR2IF 137  ]
+[e :U 138 ]
+[; ;pwm.c: 61: TRISC1 = 0;
+"61
+[e = _TRISC1 -> -> 0 `i `b ]
+[; ;pwm.c: 62: TRISC2 = 0;
+"62
+[e = _TRISC2 -> -> 0 `i `b ]
+[; ;pwm.c: 64: }
+"64
 [e :UE 135 ]
 }
-"73
+"71
 [v _setDutyCycle `(v ~T0 @X0 1 ef2`uc`uc ]
 {
-[; ;pwm.c: 72: void setDutyCycle(char value, char module)
-[; ;pwm.c: 73: {
+[; ;pwm.c: 70: void setDutyCycle(char value, char module)
+[; ;pwm.c: 71: {
 [e :U _setDutyCycle ]
 [v _value `uc ~T0 @X0 1 r1 ]
 [v _module `uc ~T0 @X0 1 r2 ]
 [f ]
-[; ;pwm.c: 75: if(module == 1)
+[; ;pwm.c: 73: if(module == 1)
+"73
+[e $ ! == -> _module `i -> 1 `i 140  ]
+[; ;pwm.c: 74: {
+"74
+{
+[; ;pwm.c: 75: CCPR1L = value;
 "75
-[e $ ! == -> _module `i -> 1 `i 137  ]
-[; ;pwm.c: 76: {
-"76
-{
-[; ;pwm.c: 77: CCPR1L = value;
-"77
 [e = _CCPR1L _value ]
+"76
+}
+[; ;pwm.c: 76: }
+[e $U 141  ]
+"77
+[e :U 140 ]
+[; ;pwm.c: 77: else if(module == 2)
+[e $ ! == -> _module `i -> 2 `i 142  ]
+[; ;pwm.c: 78: {
 "78
-}
-[; ;pwm.c: 78: }
-[e $U 138  ]
-"79
-[e :U 137 ]
-[; ;pwm.c: 79: else if(module == 2)
-[e $ ! == -> _module `i -> 2 `i 139  ]
-[; ;pwm.c: 80: {
-"80
 {
-[; ;pwm.c: 81: CCPR2L = value;
-"81
+[; ;pwm.c: 79: CCPR2L = value;
+"79
 [e = _CCPR2L _value ]
-"82
+"80
 }
-[e :U 139 ]
-"84
-[e :U 138 ]
+[e :U 142 ]
+"82
+[e :U 141 ]
+[; ;pwm.c: 80: }
 [; ;pwm.c: 82: }
-[; ;pwm.c: 84: }
-[e :UE 136 ]
+[e :UE 139 ]
 }

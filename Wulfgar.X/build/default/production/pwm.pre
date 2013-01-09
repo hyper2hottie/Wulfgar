@@ -1991,14 +1991,10 @@ TRISC2 = 1;
 PR2 = 0b11111111;
 
 
+CCPR1L = 0b00000000;
+CCPR2L = 0b00000000;
 
-
-CCPR1L = 0b111111111;
-CCPR2L = 0b111111111;
-
-
-
-
+# 37
 CCP1CON = 0b00001100;
 
 
@@ -2006,8 +2002,6 @@ CCP1CON = 0b00001100;
 
 CCP2CON = 0b00001100;
 
-TRISC1 = 0;
-TRISC2 = 0;
 
 
 TMR2IF = 0;
@@ -2015,13 +2009,18 @@ TMR2IF = 0;
 
 TMR2IE = 0;
 
-# 58
+# 56
 T2CON = 0b00000100;
 
-# 66
+
+while(!TMR2IF)
+{ }
+TRISC1 = 0;
+TRISC2 = 0;
+
 }
 
-# 72
+# 70
 void setDutyCycle(char value, char module)
 {
 

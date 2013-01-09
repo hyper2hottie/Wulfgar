@@ -1,0 +1,906 @@
+Disassembly Listing for Wulfgar
+Generated From:
+
+---  /media/data/AndroidDevelopment/Projects/Git/Wulfgar/Wulfgar.X/usart.c  -----------------------------
+1:             // C Code for Operating a USART Port in PIC16F family
+2:             // Author: Brian Grosskleg
+3:             // Date: March 3, 2012
+4:             // Modified: Wyatt Berlinic
+5:             // Date: December 22, 2012
+6:             
+7:             #ifndef USART_CODE		//Macro gaurds to prevent redefining
+8:             #define USART_CODE
+9:             
+10:            #include <string.h>
+11:            #include <xc.h>
+12:            
+13:            //Include the header file with important definitions
+14:            #include "usart.h"
+15:            
+16:            ////////////////////////////////////////////////////////////////
+17:            //USART INITIALIZATION
+18:            
+19:            void USART_Init(int receiveInterupts)
+20:            {
+21:                //Set portc7 for input and portc6 for output
+22:                TRISC7 = 1;
+0118  1683     BSF STATUS, 0x5
+0119  1303     BCF STATUS, 0x6
+011A  1787     BSF PORTC, 0x7
+23:                TRISC6 = 0;    
+011B  1307     BCF PORTC, 0x6
+24:            
+25:                //TXSTA register
+26:                //Clear SYNC bit, set to Asynchronous
+27:                SYNC = 0;
+011C  1218     BCF RCSTA, 0x4
+28:            
+29:                // Step #1) PIC Datasheet page 158.
+30:                //TXSTA register
+31:                BRGH = 1;	//Configure BAUD generator to high speed
+011D  1518     BSF RCSTA, 0x2
+32:                BRG16 = 0;	//8-bit BAUD generator
+011E  1683     BSF STATUS, 0x5
+011F  1703     BSF STATUS, 0x6
+0120  1187     BCF PORTC, 0x3
+33:            
+34:                //BAUDCTL register
+35:                //Turns off ninth bit communication
+36:                TX9=0;		//8-bit transmission
+0121  1683     BSF STATUS, 0x5
+0122  1303     BCF STATUS, 0x6
+0123  1318     BCF RCSTA, 0x6
+37:                RX9=0;		//8-bit reception
+0124  1283     BCF STATUS, 0x5
+0125  1303     BCF STATUS, 0x6
+0126  1318     BCF RCSTA, 0x6
+38:            
+39:                //SPBRG register
+40:                //BAUD rate calculation pg 165
+41:                //Fosc = 4Mhz
+42:                //Desired BAUD for RN-42(our bluetooth module) = 9600
+43:                //For RN-42:
+44:                // SPBRG = 25
+45:                // SPBRGH = 0
+46:                Set_SPBRG();
+0127  120A     BCF PCLATH, 0x4
+0128  118A     BCF PCLATH, 0x3
+0129  2090     CALL 0x90
+012A  120A     BCF PCLATH, 0x4
+012B  118A     BCF PCLATH, 0x3
+47:                //SPBRG = 25;
+48:                SPBRGH = 0;
+012C  1683     BSF STATUS, 0x5
+012D  1303     BCF STATUS, 0x6
+012E  019A     CLRF RCREG
+49:            
+50:                //Step #2) PIC Datasheet page 158.
+51:                //RCSTA register
+52:                //Set SPEN
+53:                SPEN = 1;
+012F  1283     BCF STATUS, 0x5
+0130  1303     BCF STATUS, 0x6
+0131  1798     BSF RCSTA, 0x7
+54:            
+55:                //Step #5) PIC Datasheet page 158.
+56:                //RCSTA register
+57:                //Sets CREN, enables reception
+58:                CREN = 1;
+0132  1618     BSF RCSTA, 0x4
+59:            
+60:                //Additional configuration
+61:                TXIE=0;		//Disable TX interrupts
+0133  1683     BSF STATUS, 0x5
+0134  1303     BCF STATUS, 0x6
+0135  120C     BCF PIR1, 0x4
+62:            
+63:                if(receiveInterupts)
+0136  1283     BCF STATUS, 0x5
+0137  1303     BCF STATUS, 0x6
+0138  0821     MOVF 0x21, W
+0139  0420     IORWF module, W
+013A  1903     BTFSC STATUS, 0x2
+013B  293D     GOTO 0x13D
+013C  293E     GOTO 0x13E
+013D  2944     GOTO 0x144
+64:                {
+65:                    //Enable receive interrupts(as well as global and peripheral)
+66:                    RCIE = 1;
+013E  1683     BSF STATUS, 0x5
+013F  1303     BCF STATUS, 0x6
+0140  168C     BSF PIR1, 0x5
+67:                    GIE = 1;
+0141  178B     BSF INTCON, 0x7
+68:                    PEIE = 1;
+0142  170B     BSF INTCON, 0x6
+69:                }
+0143  2947     GOTO 0x147
+70:                else
+71:                {
+72:                    RCIE = 0;       //Disable receive interrupts
+0144  1683     BSF STATUS, 0x5
+0145  1303     BCF STATUS, 0x6
+0146  128C     BCF PIR1, 0x5
+73:                }
+74:                TXEN=0;		//Reset transmitter
+0147  1298     BCF RCSTA, 0x5
+75:                //__delay_us(2);
+76:                TXEN=1;
+0148  1698     BSF RCSTA, 0x5
+77:                //__delay_us(2);
+78:                return;
+79:            }
+0149  0008     RETURN
+80:            
+81:            
+82:            void Set_SPBRG(void)
+83:            {
+84:                if(Fosc == 4000000)
+85:                {
+86:                    if(BRGH==1 && BRG16 ==0)
+0090  1683     BSF STATUS, 0x5
+0091  1303     BCF STATUS, 0x6
+0092  1D18     BTFSS RCSTA, 0x2
+0093  2895     GOTO 0x95
+0094  2896     GOTO 0x96
+0095  28E0     GOTO 0xE0
+0096  1683     BSF STATUS, 0x5
+0097  1703     BSF STATUS, 0x6
+0098  1987     BTFSC PORTC, 0x3
+0099  289B     GOTO 0x9B
+009A  289C     GOTO 0x9C
+009B  28E0     GOTO 0xE0
+009C  28B4     GOTO 0xB4
+87:                    {
+88:                        switch(BAUD_RATE)
+009D  28B4     GOTO 0xB4
+00B4  3025     MOVLW 0x25
+00B5  3A04     XORLW 0x4
+00B6  1903     BTFSC STATUS, 0x2
+00B7  28C5     GOTO 0xC5
+00B8  3A0D     XORLW 0xD
+00B9  1903     BTFSC STATUS, 0x2
+00BA  28CA     GOTO 0xCA
+00BB  3A2C     XORLW 0x2C
+00BC  1903     BTFSC STATUS, 0x2
+00BD  28CF     GOTO 0xCF
+00BE  3A0D     XORLW 0xD
+00BF  1903     BTFSC STATUS, 0x2
+00C0  28D4     GOTO 0xD4
+00C1  3A63     XORLW 0x63
+00C2  1903     BTFSC STATUS, 0x2
+00C3  28D9     GOTO 0xD9
+00C4  28E0     GOTO 0xE0
+00C5  3080     MOVLW 0x80
+00C6  3AB0     XORLW 0xB0
+00C7  1903     BTFSC STATUS, 0x2
+00C8  289E     GOTO 0x9E
+00C9  28E0     GOTO 0xE0
+00CA  3080     MOVLW 0x80
+00CB  3A60     XORLW 0x60
+00CC  1903     BTFSC STATUS, 0x2
+00CD  28A2     GOTO 0xA2
+00CE  28E0     GOTO 0xE0
+00CF  3080     MOVLW 0x80
+00D0  3A80     XORLW 0x80
+00D1  1903     BTFSC STATUS, 0x2
+00D2  28A6     GOTO 0xA6
+00D3  28E0     GOTO 0xE0
+00D4  3080     MOVLW 0x80
+00D5  3AB1     XORLW 0xB1
+00D6  1903     BTFSC STATUS, 0x2
+00D7  28AA     GOTO 0xAA
+00D8  28E0     GOTO 0xE0
+00D9  3080     MOVLW 0x80
+00DA  3A00     XORLW 0x0
+00DB  1903     BTFSC STATUS, 0x2
+00DC  28AE     GOTO 0xAE
+00DD  28E0     GOTO 0xE0
+89:                        {//Pg 165 PIC16F887 data sheet
+90:                        case 1200:	SPBRG = 207;	break;
+009E  30CF     MOVLW 0xCF
+009F  1303     BCF STATUS, 0x6
+00A0  0099     MOVWF TXREG
+00A1  28E0     GOTO 0xE0
+91:                        case 2400:	SPBRG = 103;	break;
+00A2  3067     MOVLW 0x67
+00A3  1303     BCF STATUS, 0x6
+00A4  0099     MOVWF TXREG
+00A5  28E0     GOTO 0xE0
+92:                        case 9600:	SPBRG = 25;	break;
+00A6  3019     MOVLW 0x19
+00A7  1303     BCF STATUS, 0x6
+00A8  0099     MOVWF TXREG
+00A9  28E0     GOTO 0xE0
+93:                        case 10417:	SPBRG = 23;	break;
+00AA  3017     MOVLW 0x17
+00AB  1303     BCF STATUS, 0x6
+00AC  0099     MOVWF TXREG
+00AD  28E0     GOTO 0xE0
+94:                        case 19200:	SPBRG = 12;	break;
+00AE  300C     MOVLW 0xC
+00AF  1303     BCF STATUS, 0x6
+00B0  0099     MOVWF TXREG
+00B1  28E0     GOTO 0xE0
+95:                        default:    break;
+00B2  28E0     GOTO 0xE0
+96:                        }
+00B3  28E0     GOTO 0xE0
+00DE  28E0     GOTO 0xE0
+97:                    }
+00DF  28E0     GOTO 0xE0
+98:                }
+99:                //To be expanded
+100:           
+101:               return;
+102:           }
+00E0  0008     RETURN
+103:           
+104:           
+105:           ////////////////////////////////////////////////////////////////////
+106:           //USART CHARACTER COMMANDS
+107:           
+108:           //RECIEVE COMMANDS
+109:           unsigned char get_USART_char(void)
+110:           {
+111:               do
+112:               {clear_usart_errors();}
+01D1  120A     BCF PCLATH, 0x4
+01D2  118A     BCF PCLATH, 0x3
+01D3  218B     CALL 0x18B
+01D4  120A     BCF PCLATH, 0x4
+01D5  118A     BCF PCLATH, 0x3
+113:               while(RCIF == 0);  //Continously reset errors until full byte is recieved
+01D6  1283     BCF STATUS, 0x5
+01D7  1303     BCF STATUS, 0x6
+01D8  1E8C     BTFSS PIR1, 0x5
+01D9  29DB     GOTO 0x1DB
+01DA  29DC     GOTO 0x1DC
+01DB  29D1     GOTO 0x1D1
+01DC  29DD     GOTO 0x1DD
+114:           
+115:               return RCREG;	//Upon reading RCREG, RCIF flag is reset
+01DD  081A     MOVF RCREG, W
+01DE  29DF     GOTO 0x1DF
+116:           }
+01DF  0008     RETURN
+117:           
+118:           
+119:           unsigned char get_USART_char_timeout(void)
+120:           {
+121:               //Recieve one byte with a timeout
+122:               for(unsigned int timeout_int = 0xFFFF; timeout_int != 0; timeout_int--)
+123:               {
+124:                       if (RCIF == 1)	//Continuously check if byte was recieved
+125:                       {return RCREG;}
+126:                       clear_usart_errors();
+127:               }
+128:           
+129:               //dummy = RCREG;		//Flush RCREG
+130:               return 0;			//If no byte was recieved within time limit, return 0.
+131:           }
+132:           
+133:           
+134:           //TRANSMIT COMMANDS
+135:           void send_USART_char(unsigned char character)
+136:           {
+137:               do 		//while the TXREG is full
+138:               {clear_usart_errors();}  	//Continously reset errors
+139:               while(TXIF == 0);
+140:           
+141:               TXREG = character;		//Write character out to USART
+142:               //__delay_ms((8/BAUD_RATE)*1000);			//Wait for transmission
+143:               //__delay_ms(1);
+144:           
+145:               return;
+146:           }
+147:           
+148:           void send_USART_string(unsigned char const string[])
+149:           {
+150:               for(unsigned char iter = 0 ; iter < strlen(string) ; iter++)
+151:               {send_USART_char(string[iter]);}
+152:               return;
+153:           }
+154:           
+155:           
+156:           
+157:           ////////////////////////////////////////////////////////////////////
+158:           //USART ERROR CLEARING
+159:           void clear_usart_errors(void)
+160:           {
+161:               //Dummy byte for flushing the RCREG
+162:               char dummy;
+163:               if (OERR == 1)
+018B  1283     BCF STATUS, 0x5
+018C  1303     BCF STATUS, 0x6
+018D  1C98     BTFSS RCSTA, 0x1
+018E  2990     GOTO 0x190
+018F  2991     GOTO 0x191
+0190  2999     GOTO 0x199
+164:               {
+165:                       TXEN=0;				//Reset transmitter
+0191  1683     BSF STATUS, 0x5
+0192  1303     BCF STATUS, 0x6
+0193  1298     BCF RCSTA, 0x5
+166:                       TXEN=1;
+0194  1698     BSF RCSTA, 0x5
+167:                       CREN=0;				//Reset continous recieve
+0195  1283     BCF STATUS, 0x5
+0196  1303     BCF STATUS, 0x6
+0197  1218     BCF RCSTA, 0x4
+168:                       CREN=1;
+0198  1618     BSF RCSTA, 0x4
+169:               }
+170:               if (FERR == 1)
+0199  1D18     BTFSS RCSTA, 0x2
+019A  299C     GOTO 0x19C
+019B  299D     GOTO 0x19D
+019C  29A7     GOTO 0x1A7
+171:               {
+172:                       dummy=RCREG;		//Flush RCREG
+019D  081A     MOVF RCREG, W
+019E  00F0     MOVWF 0x70
+019F  0870     MOVF 0x70, W
+01A0  00F1     MOVWF dummy
+173:                       TXEN=0;				//Reset transmitter
+01A1  1683     BSF STATUS, 0x5
+01A2  1303     BCF STATUS, 0x6
+01A3  1298     BCF RCSTA, 0x5
+174:                       TXEN=1;
+01A4  1698     BSF RCSTA, 0x5
+01A5  29A7     GOTO 0x1A7
+175:               }
+01A6  29A7     GOTO 0x1A7
+176:               return;
+177:           }
+01A7  0008     RETURN
+178:           
+179:           #endif
+---  /media/data/AndroidDevelopment/Projects/Git/Wulfgar/Wulfgar.X/pwm.c  -------------------------------
+1:             /*
+2:              * File:   pwm.c
+3:              * Author: Wyatt Berlinic
+4:              *
+5:              * Created on January 1, 2013, 7:58 PM
+6:              */
+7:             
+8:             #ifndef PWM_C
+9:             #define	PWM_C
+10:            
+11:            #include <xc.h>
+12:            
+13:            #include "pwm.h"
+14:            
+15:            /*This function initializes the CCPx module for pwm
+16:             *mode and sets up Timer2.  Sets up tris bits for pins
+17:             * that ccp is operating on.
+18:             */
+19:            void pwmInit()
+20:            {
+21:                //Disable ouput drivers on CCP pins
+22:                TRISC1 = 1;
+016B  1683     BSF STATUS, 0x5
+016C  1303     BCF STATUS, 0x6
+016D  1487     BSF PORTC, 0x1
+23:                TRISC2 = 1;
+016E  1507     BSF PORTC, 0x2
+24:                
+25:                //Max period
+26:                PR2 = 0b11111111;
+016F  30FF     MOVLW 0xFF
+0170  0092     MOVWF T2CON
+27:            
+28:                //Start with a zero duty cycle
+29:                CCPR1L = 0b00000000;
+0171  1283     BCF STATUS, 0x5
+0172  1303     BCF STATUS, 0x6
+0173  0195     CLRF CCPR1L
+30:                CCPR2L = 0b00000000;
+0174  019B     CLRF CCPR2L
+31:                //CCPR1L = 0b111111111;
+32:                //CCPR2L = 0b111111111;
+33:                
+34:                //7-6=00->Single output, p1a modulated
+35:                //5-4=00->lsb's of pwm duty cycle
+36:                //3-0=1100->pwm mode, p1A active high
+37:                CCP1CON = 0b00001100;
+0175  300C     MOVLW 0xC
+0176  0097     MOVWF CCP1CON
+38:                
+39:                //7-6=unimplemented
+40:                //5-4=00->lsb's of pwm duty cycle
+41:                //3-0=1100->pwm mode
+42:                CCP2CON = 0b00001100;
+0177  300C     MOVLW 0xC
+0178  009D     MOVWF CCP2CON
+43:            
+44:            
+45:                //Clear timer2 interrupt flag
+46:                TMR2IF = 0;
+0179  108C     BCF PIR1, 0x1
+47:            
+48:                //Disable timer 2 interrups
+49:                TMR2IE = 0;
+017A  1683     BSF STATUS, 0x5
+017B  1303     BCF STATUS, 0x6
+017C  108C     BCF PIR1, 0x1
+50:            
+51:                //Turn on timer2, random postscaler, minimal prescaler
+52:                //7->unimplemented
+53:                //6-3=0000->1:1 postscaler
+54:                //2=1->Timer2 is on
+55:                //1-0=00->prescaler is 1
+56:                T2CON = 0b00000100;
+017D  3004     MOVLW 0x4
+017E  1283     BCF STATUS, 0x5
+017F  1303     BCF STATUS, 0x6
+0180  0092     MOVWF T2CON
+57:            
+58:                //Wait for timer2 to overflow, then enable CCPx output
+59:                while(!TMR2IF)
+0181  2982     GOTO 0x182
+0182  1C8C     BTFSS PIR1, 0x1
+0183  2985     GOTO 0x185
+0184  2986     GOTO 0x186
+0185  2982     GOTO 0x182
+60:                { }
+61:                TRISC1 = 0;
+0186  1683     BSF STATUS, 0x5
+0187  1303     BCF STATUS, 0x6
+0188  1087     BCF PORTC, 0x1
+62:                TRISC2 = 0;
+0189  1107     BCF PORTC, 0x2
+63:                
+64:            }
+018A  0008     RETURN
+65:            
+66:            /*This function sets the duty cycle for the pwm module that is input.
+67:             * @param value - The value for the duty cycle
+68:             * @param module - The module to set the pwm value of
+69:             */
+70:            void setDutyCycle(char value, char module)
+71:            {
+72:                
+73:                if(module == 1)
+01A8  1283     BCF STATUS, 0x5
+01A9  1303     BCF STATUS, 0x6
+01AA  00A1     MOVWF 0x21
+01AB  0820     MOVF module, W
+01AC  3A01     XORLW 0x1
+01AD  1D03     BTFSS STATUS, 0x2
+01AE  29B0     GOTO 0x1B0
+01AF  29B1     GOTO 0x1B1
+01B0  29B4     GOTO 0x1B4
+74:                {
+75:                    CCPR1L = value;
+01B1  0821     MOVF 0x21, W
+01B2  0095     MOVWF CCPR1L
+76:                }
+01B3  29BE     GOTO 0x1BE
+77:                else if(module == 2)
+01B4  0820     MOVF module, W
+01B5  3A02     XORLW 0x2
+01B6  1D03     BTFSS STATUS, 0x2
+01B7  29B9     GOTO 0x1B9
+01B8  29BA     GOTO 0x1BA
+01B9  29BE     GOTO 0x1BE
+78:                {
+79:                    CCPR2L = value;
+01BA  0821     MOVF 0x21, W
+01BB  009B     MOVWF CCPR2L
+01BC  29BE     GOTO 0x1BE
+80:                }
+01BD  29BE     GOTO 0x1BE
+81:            
+82:            }
+01BE  0008     RETURN
+83:            
+84:            #endif	/* PWM_C */
+85:            
+86:            
+---  /media/data/AndroidDevelopment/Projects/Git/Wulfgar/Wulfgar.X/motor.c  -----------------------------
+1:             
+2:             /*
+3:              * File:   motor.c
+4:              * Author: Wyatt Berlinic
+5:              *
+6:              * Created on January 2, 2013, 4:23 PM
+7:              */
+8:             
+9:             #ifndef MOTOR_C
+10:            #define	MOTOR_C
+11:            
+12:            #include <xc.h>
+13:            #include "pwm.h"
+14:            
+15:            #include "motor.h"
+16:            
+17:            /*Initializes pwm and sets up extra ports for controlling
+18:             * the motors.
+19:             */
+20:            void motorInit(void)
+21:            {
+22:                //The ports we use for motor direction selection
+23:                TRISA0 = 0;
+01BF  1683     BSF STATUS, 0x5
+01C0  1303     BCF STATUS, 0x6
+01C1  1005     BCF PORTA, 0x0
+24:                TRISA1 = 0;
+01C2  1085     BCF PORTA, 0x1
+25:                TRISA2 = 0;
+01C3  1105     BCF PORTA, 0x2
+26:                TRISA3 = 0;
+01C4  1185     BCF PORTA, 0x3
+27:                
+28:                RA0 = 1;
+01C5  1283     BCF STATUS, 0x5
+01C6  1303     BCF STATUS, 0x6
+01C7  1405     BSF PORTA, 0x0
+29:                RA1 = 0;
+01C8  1085     BCF PORTA, 0x1
+30:                RA2 = 1;
+01C9  1505     BSF PORTA, 0x2
+31:                RA3 = 0;
+01CA  1185     BCF PORTA, 0x3
+32:                
+33:                pwmInit();
+01CB  120A     BCF PCLATH, 0x4
+01CC  118A     BCF PCLATH, 0x3
+01CD  216B     CALL 0x16B
+01CE  120A     BCF PCLATH, 0x4
+01CF  118A     BCF PCLATH, 0x3
+34:            
+35:            }
+01D0  0008     RETURN
+36:            
+37:            void setSpeed(char speed, char motor)
+38:            {
+0015  1283     BCF STATUS, 0x5
+0016  1303     BCF STATUS, 0x6
+0017  00A5     MOVWF 0x25
+39:                if(speed == 127 || speed == 128)
+0018  0825     MOVF 0x25, W
+0019  3A7F     XORLW 0x7F
+001A  1903     BTFSC STATUS, 0x2
+001B  281D     GOTO 0x1D
+001C  281E     GOTO 0x1E
+001D  2825     GOTO 0x25
+001E  0825     MOVF 0x25, W
+001F  3A80     XORLW 0x80
+0020  1D03     BTFSS STATUS, 0x2
+0021  2823     GOTO 0x23
+0022  2824     GOTO 0x24
+0023  2830     GOTO 0x30
+0024  2825     GOTO 0x25
+40:                {
+41:                    setDutyCycle(0, motor);
+0025  0822     MOVF motor, W
+0026  00A3     MOVWF 0x23
+0027  0823     MOVF 0x23, W
+0028  00A0     MOVWF module
+0029  3000     MOVLW 0x0
+002A  120A     BCF PCLATH, 0x4
+002B  118A     BCF PCLATH, 0x3
+002C  21A8     CALL 0x1A8
+002D  120A     BCF PCLATH, 0x4
+002E  118A     BCF PCLATH, 0x3
+42:                }
+002F  288F     GOTO 0x8F
+43:                else if(speed > 128)
+0030  3081     MOVLW 0x81
+0031  1283     BCF STATUS, 0x5
+0032  1303     BCF STATUS, 0x6
+0033  0225     SUBWF 0x25, W
+0034  1C03     BTFSS STATUS, 0x0
+0035  2837     GOTO 0x37
+0036  2838     GOTO 0x38
+0037  2861     GOTO 0x61
+44:                {
+45:                    if(motor == 1)
+0038  0822     MOVF motor, W
+0039  3A01     XORLW 0x1
+003A  1D03     BTFSS STATUS, 0x2
+003B  283D     GOTO 0x3D
+003C  283E     GOTO 0x3E
+003D  2841     GOTO 0x41
+46:                    {
+47:                        RA0 = 1;
+003E  1405     BSF PORTA, 0x0
+48:                        RA1 = 0;
+003F  1085     BCF PORTA, 0x1
+49:                    }
+0040  2844     GOTO 0x44
+50:                    else
+51:                    {
+52:                        RA2 = 1;
+0041  1505     BSF PORTA, 0x2
+53:                        RA3 = 0;
+0042  1185     BCF PORTA, 0x3
+0043  2844     GOTO 0x44
+54:                    }
+55:                    speed = speed - 129;
+0044  0825     MOVF 0x25, W
+0045  3E7F     ADDLW 0x7F
+0046  00A3     MOVWF 0x23
+0047  0823     MOVF 0x23, W
+0048  00A5     MOVWF 0x25
+56:                    speed = speed << 2;
+0049  0825     MOVF 0x25, W
+004A  00A3     MOVWF 0x23
+004B  3001     MOVLW 0x1
+004C  1003     BCF STATUS, 0x0
+004D  0DA3     RLF 0x23, F
+004E  3EFF     ADDLW 0xFF
+004F  1D03     BTFSS STATUS, 0x2
+0050  284C     GOTO 0x4C
+0051  1003     BCF STATUS, 0x0
+0052  0D23     RLF 0x23, W
+0053  00A4     MOVWF 0x24
+0054  0824     MOVF 0x24, W
+0055  00A5     MOVWF 0x25
+57:                    setDutyCycle(speed, motor);
+0056  0822     MOVF motor, W
+0057  00A3     MOVWF 0x23
+0058  0823     MOVF 0x23, W
+0059  00A0     MOVWF module
+005A  0825     MOVF 0x25, W
+005B  120A     BCF PCLATH, 0x4
+005C  118A     BCF PCLATH, 0x3
+005D  21A8     CALL 0x1A8
+005E  120A     BCF PCLATH, 0x4
+005F  118A     BCF PCLATH, 0x3
+58:                }
+0060  288F     GOTO 0x8F
+59:                else if(speed < 127)
+0061  307F     MOVLW 0x7F
+0062  1283     BCF STATUS, 0x5
+0063  1303     BCF STATUS, 0x6
+0064  0225     SUBWF 0x25, W
+0065  1803     BTFSC STATUS, 0x0
+0066  2868     GOTO 0x68
+0067  2869     GOTO 0x69
+0068  288F     GOTO 0x8F
+60:                {
+61:                    if(motor == 1)
+0069  0822     MOVF motor, W
+006A  3A01     XORLW 0x1
+006B  1D03     BTFSS STATUS, 0x2
+006C  286E     GOTO 0x6E
+006D  286F     GOTO 0x6F
+006E  2872     GOTO 0x72
+62:                    {
+63:                        RA0 = 0;
+006F  1005     BCF PORTA, 0x0
+64:                        RA1 = 1;
+0070  1485     BSF PORTA, 0x1
+65:                    }
+0071  2875     GOTO 0x75
+66:                    else
+67:                    {
+68:                        RA2 = 0;
+0072  1105     BCF PORTA, 0x2
+69:                        RA3 = 1;
+0073  1585     BSF PORTA, 0x3
+0074  2875     GOTO 0x75
+70:                    }
+71:                    speed = speed << 2;
+0075  0825     MOVF 0x25, W
+0076  00A3     MOVWF 0x23
+0077  3001     MOVLW 0x1
+0078  1003     BCF STATUS, 0x0
+0079  0DA3     RLF 0x23, F
+007A  3EFF     ADDLW 0xFF
+007B  1D03     BTFSS STATUS, 0x2
+007C  2878     GOTO 0x78
+007D  1003     BCF STATUS, 0x0
+007E  0D23     RLF 0x23, W
+007F  00A4     MOVWF 0x24
+0080  0824     MOVF 0x24, W
+0081  00A5     MOVWF 0x25
+72:                    setDutyCycle(speed, motor);
+0082  0822     MOVF motor, W
+0083  00A3     MOVWF 0x23
+0084  0823     MOVF 0x23, W
+0085  00A0     MOVWF module
+0086  0825     MOVF 0x25, W
+0087  120A     BCF PCLATH, 0x4
+0088  118A     BCF PCLATH, 0x3
+0089  21A8     CALL 0x1A8
+008A  120A     BCF PCLATH, 0x4
+008B  118A     BCF PCLATH, 0x3
+008C  288F     GOTO 0x8F
+73:                }
+008D  288F     GOTO 0x8F
+74:            }
+008E  288F     GOTO 0x8F
+75:            
+76:            
+77:            #endif	/* MOTOR_C */
+78:            
+---  /media/data/AndroidDevelopment/Projects/Git/Wulfgar/Wulfgar.X/main.c  ------------------------------
+1:             /* 
+2:              * File:   main.c
+3:              * Author: hyper2hottie
+4:              *
+5:              * Created on December 23, 2012, 9:36 PM
+6:              */
+7:             
+8:             #include <stdio.h>
+9:             #include <stdlib.h>
+10:            
+11:            #include "main.h"
+12:            
+13:            char command = 'A';
+14:            
+15:            void interrupt isr(void)
+16:            {
+0004  00FE     MOVWF 0x7E
+0005  0E03     SWAPF STATUS, W
+0006  00F3     MOVWF 0x73
+0007  0804     MOVF FSR, W
+0008  00F4     MOVWF 0x74
+0009  080A     MOVF PCLATH, W
+000A  00F5     MOVWF 0x75
+000B  1283     BCF STATUS, 0x5
+000C  1303     BCF STATUS, 0x6
+000D  087F     MOVF 0x7F, W
+000E  00F6     MOVWF 0x76
+000F  120A     BCF PCLATH, 0x4
+0010  118A     BCF PCLATH, 0x3
+0011  294A     GOTO 0x14A
+0012  120A     BCF PCLATH, 0x4
+0013  118A     BCF PCLATH, 0x3
+0014  29E0     GOTO 0x1E0
+17:                //Disable interrupts
+18:                //GIE = 0;
+19:                //INTE = 0;
+20:            
+21:                //Check if this is a usart receive interrupt
+22:                if(RCIF)
+014A  1E8C     BTFSS PIR1, 0x5
+014B  294D     GOTO 0x14D
+014C  294E     GOTO 0x14E
+014D  2959     GOTO 0x159
+23:                {
+24:                    command = get_USART_char();
+014E  120A     BCF PCLATH, 0x4
+014F  118A     BCF PCLATH, 0x3
+0150  21D1     CALL 0x1D1
+0151  120A     BCF PCLATH, 0x4
+0152  118A     BCF PCLATH, 0x3
+0153  00F2     MOVWF 0x72
+0154  0872     MOVF 0x72, W
+0155  1283     BCF STATUS, 0x5
+0156  1303     BCF STATUS, 0x6
+0157  00AA     MOVWF command
+25:                }
+0158  2960     GOTO 0x160
+26:                else if(TMR2IF)
+0159  1C8C     BTFSS PIR1, 0x1
+015A  295C     GOTO 0x15C
+015B  295D     GOTO 0x15D
+015C  2960     GOTO 0x160
+27:                {
+28:                    //Clear timer2 interrupt flag
+29:                    TMR2IF = 0;
+015D  108C     BCF PIR1, 0x1
+015E  2960     GOTO 0x160
+30:                }
+015F  2960     GOTO 0x160
+31:                //Reenable interrupts
+32:                //GIE = 1;
+33:                //INTE = 1;
+34:                
+35:                return;
+36:            }
+0160  0876     MOVF 0x76, W
+37:            
+38:            int main(int argc, char** argv)
+39:            {
+40:                //Init some important pi variables
+41:                picInit();
+00E1  120A     BCF PCLATH, 0x4
+00E2  118A     BCF PCLATH, 0x3
+00E3  21EB     CALL 0x1EB
+00E4  120A     BCF PCLATH, 0x4
+00E5  118A     BCF PCLATH, 0x3
+42:                
+43:                //Init usart for transmit and receive
+44:                USART_Init(1);
+00E6  3001     MOVLW 0x1
+00E7  1283     BCF STATUS, 0x5
+00E8  1303     BCF STATUS, 0x6
+00E9  00A0     MOVWF module
+00EA  3000     MOVLW 0x0
+00EB  00A1     MOVWF 0x21
+00EC  120A     BCF PCLATH, 0x4
+00ED  118A     BCF PCLATH, 0x3
+00EE  2118     CALL 0x118
+00EF  120A     BCF PCLATH, 0x4
+00F0  118A     BCF PCLATH, 0x3
+45:            
+46:                //Init motor
+47:                motorInit();
+00F1  120A     BCF PCLATH, 0x4
+00F2  118A     BCF PCLATH, 0x3
+00F3  21BF     CALL 0x1BF
+00F4  120A     BCF PCLATH, 0x4
+00F5  118A     BCF PCLATH, 0x3
+00F6  28F7     GOTO 0xF7
+48:            
+49:                while(1)
+0114  28F7     GOTO 0xF7
+50:                {
+51:                    if(command == 'A')
+00F7  1283     BCF STATUS, 0x5
+00F8  1303     BCF STATUS, 0x6
+00F9  082A     MOVF command, W
+00FA  3A41     XORLW 0x41
+00FB  1D03     BTFSS STATUS, 0x2
+00FC  28FE     GOTO 0xFE
+00FD  28FF     GOTO 0xFF
+00FE  2909     GOTO 0x109
+52:                    {
+53:                        RB5 = 1;
+00FF  1686     BSF PORTB, 0x5
+54:                        setSpeed(255, 1);
+0100  01A2     CLRF motor
+0101  0AA2     INCF motor, F
+0102  30FF     MOVLW 0xFF
+0103  120A     BCF PCLATH, 0x4
+0104  118A     BCF PCLATH, 0x3
+0105  2015     CALL 0x15
+0106  120A     BCF PCLATH, 0x4
+0107  118A     BCF PCLATH, 0x3
+55:                    }
+0108  28F7     GOTO 0xF7
+56:                    else
+57:                    {
+58:                        RB5 = 0;
+0109  1286     BCF PORTB, 0x5
+59:                        setSpeed(128, 1);
+010A  01A2     CLRF motor
+010B  0AA2     INCF motor, F
+010C  3080     MOVLW 0x80
+010D  120A     BCF PCLATH, 0x4
+010E  118A     BCF PCLATH, 0x3
+010F  2015     CALL 0x15
+0110  120A     BCF PCLATH, 0x4
+0111  118A     BCF PCLATH, 0x3
+0112  28F7     GOTO 0xF7
+60:                    
+61:                    }
+0113  28F7     GOTO 0xF7
+62:                }
+63:                
+64:                return (EXIT_SUCCESS);
+65:            }
+0115  120A     BCF PCLATH, 0x4
+66:            
+67:            ///This function initializes important registers
+68:            ///that enable the pic to use usart and pwm.
+69:            void picInit()
+70:            {
+71:            
+72:                //Set all pins to digital
+73:                ANSEL = 0;
+01EB  1683     BSF STATUS, 0x5
+01EC  1703     BSF STATUS, 0x6
+01ED  0188     CLRF 0x8
+74:                ANSELH = 0;
+01EE  0189     CLRF PORTE
+75:                
+76:                //Set portb5 to an output for an indicator LED
+77:                TRISB5 = 0;
+01EF  1683     BSF STATUS, 0x5
+01F0  1303     BCF STATUS, 0x6
+01F1  1286     BCF PORTB, 0x5
+78:            
+79:                //Disable interupts
+80:                GIE = 0;
+01F2  138B     BCF INTCON, 0x7
+01F3  29F4     GOTO 0x1F4
+81:            
+82:                return;
+83:            }
+01F4  0008     RETURN
